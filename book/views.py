@@ -1,13 +1,28 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-
-def my_favourite_writer_view(request):
-        return HttpResponse('<h1>Мой любимый писатель<h1><p>Мой любимый писатель - Лев Толстой.<p>')
+from . import models
 
 
-def facts_about_writer_view(request):
-        return HttpResponse('<h1>Факты о писателе<h1><p>28 августа 1828 года, а его литературное наследие составляет огромное собрание сочинений объемом около 90 томов.<p>')
+def blog_list_view(request):
+    if request.method == 'GET':
+        blog = models.Blog.objects.all()
+    return render(request, 'blog_list.html', {'blog': blog})
 
 
-def my_opinion_about_writer_view(request):
-        return HttpResponse('<h1>Мое мнение<h1>Я думаю он реальный русский лев как его имя<p>')
+def blog_detail_view(request, id):
+    if request.method == 'GET':
+        blog_id = get_object_or_404(models.Blog, id=id)
+    return render(request, 'blog_detail.html', {'blog_id': blog_id})
+
+
+def hello_world_view(request):
+    if request.method == "GET":
+        return HttpResponse('Ура это первый мой проект на DJANGO')
+
+def my_favourite_emodji_view(request):
+    if request.method == "GET":
+        return HttpResponse('😁🤣🤖🫠🌚')
+
+def about_my_self_view(request):
+    if request.method == 'GET':
+        return HttpResponse('Меня зовут Галя, я BACKEND DEVELOPER')

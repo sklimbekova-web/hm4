@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.title }}</title>
+</head>
+<body>
+    <h1>{{ product.title }}</h1>
+    <p><strong>Описание:</strong> {{ product.description }}</p>
+    <p><strong>Цена:</strong> {{ product.price }} руб.</p>
+    <p><strong>Количество на складе:</strong> {{ product.stock }} шт.</p>
+    <p><strong>Категория:</strong> {{ product.category }}</p>
+    <p><strong>Производитель:</strong> {{ product.manufacturer }}</p>
+    <p><strong>В наличии:</strong> {% if product.is_available %}Да{% else %}Нет{% endif %}</p>
+    <p><strong>Дата добавления:</strong> {{ product.created_at }}</p>
+    <p><strong>Серийный номер:</strong> 
+        {% if product.serial_number %}
+            {{ product.serial_number.number }}
+        {% else %}
+            Не указан
+        {% endif %}
+    </p>
+
+    <hr>
+    <h3>Комментарии и отзывы:</h3>
+    <ul>
+        {% for comment in product.comments.all %}
+            <li>
+                <strong>{{ comment.author }}</strong> ({{ comment.created_at }}):
+                <p>{{ comment.text }}</p>
+            </li>
+        {% empty %}
+            <li>К этому товару пока нет комментариев.</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'myShop:product_list' %}">← Вернуться к списку товаров</a></p>
+</body>
+</html>
