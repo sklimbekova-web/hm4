@@ -26,3 +26,12 @@ def my_favourite_emodji_view(request):
 def about_my_self_view(request):
     if request.method == 'GET':
         return HttpResponse('Меня зовут Галя, я BACKEND DEVELOPER')
+
+def book_list_view(request):
+    if request.method == 'GET':
+        books = Book.object.all()
+        return render (request, 'book_list.html', {'books': books})
+
+def book_detail_view(request, book_id):
+    book = get_object_or_404(Book, book_id)
+    return render(request, 'book_detail_html', {'book': book}) 

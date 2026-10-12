@@ -1,25 +1,15 @@
 from django.db import models
 
 class Book(models.Model):
-    title = models.CharField(verbose_name = 'укажите количество книг:', max_length = 20)
-    image = models.ImageField(verbose_name = 'загрузите фото профиля:', upload_to = 'book/')
-    description = models.TextField(verbose_name='укажите описание блога:', blank = True)
-    author_email = models.EmailField(verbose_name='укажите свою почту:', default = '_@gmail.com')
-    CATEGORIES = (
-        ('Детектив', 'Детектив'),
-        ('Ужастик', 'Ужастик'),
-        ('Комедия', 'Комедия')
-    )
-    categories = models.CharField(verbose_name='Выберите категорию блога:',
-                                   choices = CATEGORIES,
-                                     default = 'Комедия')
+    title = models.CharField(verbose_name='Название книги:', max_length=100,)
+    author = models.CharField(verbose_name='Автор книги:', max_length=40)
+    description = models.TextField(verbose_name='Описание книги:', )
+    publication_date = models.DateField(verbose_name='Дата публикации:')
+    pages = models.IntegerField(verbose_name='Количество страниц:')
+    price = models.DecimalField(verbose_name='Цена книги:', max_digits=8, decimal_places=2)
+    rating = models.FloatField(verbose_name='Рейтинг книги:', default=0)
+    genre = models.CharField(verbose_name='Жанр:', max_length=100)
 
-    url_blog = models.URLField(verbose_name = 'Есть ссылка на ютуб?', blank = True)
-    created_ad = models.DateField(auto_now_add = True)
-
-    class Meta:
-        verbose_name = 'блог'
-        verbose_name_plural = 'список блогов' 
 
     def __str__(self):
         return self.title
