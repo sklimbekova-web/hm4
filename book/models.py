@@ -9,7 +9,8 @@ class Book(models.Model):
     price = models.DecimalField(verbose_name='Цена книги:', max_digits=8, decimal_places=2)
     rating = models.FloatField(verbose_name='Рейтинг книги:', default=0)
     genre = models.CharField(verbose_name='Жанр:', max_length=100)
-
+    publisher_email = models.EmailField(verbose_name="Email издательства", blank=True)
+    website_url = models.URLField(verbose_name="Сайт книги", blank=True)
 
     def __str__(self):
         return self.title
