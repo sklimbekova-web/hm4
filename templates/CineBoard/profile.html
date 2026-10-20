@@ -1,0 +1,34 @@
+{% extends 'CineBoard/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title mb-4">Мой профиль</h1>
+
+                <dl class="row">
+                    <dt class="col-sm-4">Имя пользователя</dt>
+                    <dd class="col-sm-8">{{ user.username }}</dd>
+
+                    <dt class="col-sm-4">Электронная почта</dt>
+                    <dd class="col-sm-8">{{ user.email|default:"Не указана" }}</dd>
+
+                    <dt class="col-sm-4">Дата регистрации</dt>
+                    <dd class="col-sm-8">{{ user.date_joined|date:"d.m.Y" }}</dd>
+
+                    <dt class="col-sm-4">VIP-место</dt>
+                    <dd class="col-sm-8">
+                        {% if vip_seat %}
+                            Место №{{ vip_seat.seat_number }}
+                        {% else %}
+                            Пока не забронировано
+                        {% endif %}
+                    </dd>
+                </dl>
+
+                <a href="{% url 'movie_list' %}" class="btn btn-primary">К списку фильмов</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

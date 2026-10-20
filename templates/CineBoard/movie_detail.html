@@ -1,0 +1,87 @@
+{% extends 'CineBoard/base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        {% if movie.poster %}
+            <img src="{{ movie.poster.url }}" class="img-fluid rounded shadow" alt="{{ movie.title }}">
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <h2>{{ movie.title }}</h2>
+        <p class="text-muted">Год выпуска: {{ movie.release_year }} | Длительность: {{ movie.duration_minutes }} мин. | Рейтинг: ⭐ {{ movie.rating }}/10</p>
+        <p><strong>Жанры:</strong> 
+            {% for g in movie.genres.all %}
+                <span class="badge bg-secondary">{{ g.name }}</span>
+            {% endfor %}
+        </p>
+        <p><strong>Описание:</strong></p>
+        <p>{{ movie.description }}</p>
+
+        {% if user.is_staff %}
+            <div class="mb-3">
+                <a href="{% url 'movie_edit' movie.pk %}" class="btn btn-warning btn-sm">Редактировать</a>
+                <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger btn-sm">Удалить</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<hr class="my-4">
+
+
+<div class="card p-3 mb-4">
+    <h4> Бронирование VIP-мест (1 человек = 1 место)</h4>
+    <div class="d-flex flex-wrap gap-2 mt-2">
+        {% for seat in vip_seats %}
+            {% if seat.reserved_by %}
+                {% if user_vip_seat.pk == seat.pk %}
+                    <button class="btn btn-primary btn-sm" disabled>Ваше место №{{ seat.seat_number }}</button>
+                {% else %}
+                    <button class="btn btn-secondary btn-sm" disabled>Место №{{ seat.seat_number }} (Занято)</button>
+                {% endif %}
+            {% else %}
+                {% if user.is_authenticated %}
+                    {% if user_vip_seat %}
+                        <button class="btn btn-outline-secondary btn-sm" disabled>Место №{{ seat.seat_number }} (можно занять только одно место)</button>
+                    {% else %}
+                        <form action="{% url 'vip_book' seat.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Забронировать место №{{ seat.seat_number }}</button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm">Войдите, чтобы забронировать место №{{ seat.seat_number }}</a>
+                {% endif %}
+            {% endif %}
+        {% empty %}
+            <p class="text-muted mb-0">VIP-мест пока нет. Запустите миграции проекта, чтобы создать места для бронирования.</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+<h4 class="mt-4">💬 Комментарии</h4>
+
+{% if user.is_authenticated %}
+    <form action="{% url 'add_comment' movie.pk %}" method="post" class="mb-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success btn-sm">Отправить комментарий</button>
+    </form>
+{% else %}
+    <p class="text-muted">Оставлять комментарии могут только авторизованные пользователи. Пожалуйста, <a href="{% url 'login' %}">войдите</a>.</p>
+{% endif %}
+
+<div class="list-group">
+    {% for comment in movie.comments.all %}
+        <div class="list-group-item mb-2">
+            <h6 class="mb-1"><strong>{{ comment.author.username }}</strong> <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small></h6>
+            <p class="mb-0">{{ comment.text }}</p>
+        </div>
+    {% empty %}
+        <p class="text-muted">Пока нет комментариев. Будьте первыми!</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

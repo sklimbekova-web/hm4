@@ -1,6 +1,0 @@
-venv/
-media
-*.sqlite3
-__pychahe__/
-*.pyc
-.vscode/

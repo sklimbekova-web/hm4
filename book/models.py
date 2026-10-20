@@ -11,6 +11,8 @@ class Book(models.Model):
     genre = models.CharField(verbose_name='Жанр:', max_length=100)
     publisher_email = models.EmailField(verbose_name="Email издательства", blank=True)
     website_url = models.URLField(verbose_name="Сайт книги", blank=True)
+    views = models.PositiveBigIntegerField(default=0, null = True)
+    
 
     def __str__(self):
         return self.title
